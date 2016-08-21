@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <h1>Guestbook</h1>
+
+<p>Order by: 
+    <a href="{{ path('_index', {sort: 'user', order: 'ASC'}) }}" class="label {{ sort == 'user' ? 'label-primary' : 'label-info' }}">User name</a> 
+    <a href="{{ path('_index', {sort: 'email', order: 'ASC'}) }}" class="label {{ sort == 'email' ? 'label-primary' : 'label-info' }}">E-mail</a>
+    <a href="{{ path('_index', {sort: 'date', order: 'ASC'}) }}" class="label {{ sort == 'date' and order == 'ASC'? 'label-primary' : 'label-info' }}">Date (ascending)</a>
+    <a href="{{ path('_index') }}" class="label {{ sort == 'date' and order == 'DESC' ? 'label-primary' : 'label-info' }}">Date (descending)</a>
+</p>
+
+<table class="table table-bordered"> 
+    <thead> 
+        <tr>  
+            <th>User name</th> 
+            <th>Review date</th> 
+            <th>User e-mail</th> 
+            <th>User IP</th> 
+            <th>User agent</th> 
+            <th>Review text</th> 
+        </tr> 
+    </thead> 
+    <tbody> 
+        {% for post in posts %}
+            <tr> 
+                <td><h2 class="blog-post-title">{{ post.user }}</h2></td> 
+                <td>{% if post.date %}{{ post.date|date('d.m.Y H:i:s') }}{% endif %}</td> 
+                <td>{{ post.email }}</td> 
+                <td>{{ post.ip }}</td> 
+                <td>{{ post.agent }}</td> 
+                <td>{{ post.text }}</td> 
+            </tr> 
+         {% endfor %}
+    </tbody> 
+</table>
+
+            {% if maxPages > 1 %}
+                {% if sort != 'date' and order != 'DESC' %}
+                    <ul class="pagination pagination-sm">
+                        {# `«` arrow  #}
+                        <li {{ thisPage == 1 ? 'class="disabled"' }}>
+                            <a href="{{ path('_index', {page: thisPage-1 < 1 ? 1 : thisPage-1, sort: sort, order: order,}) }}">«</a>
+                        </li>
+
+                        {# Render each page number #}
+                        {% for i in 1..maxPages %}
+                        <li {{ thisPage == i ? 'class="active"' }}>
+                        <a href="{{ path('_index', {page: i, sort: sort, order: order,}) }}">{{ i }}</a>
+                        </li>
+                        {% endfor %}
+
+                        {# `»` arrow #}
+                        <li {{ thisPage == maxPages ? 'class="disabled"' }}>
+                            <a href="{{ path('_index', {page: thisPage+1 <= maxPages ? thisPage+1 : thisPage, sort: sort, order: order,}) }}">»</a>
+                        </li>
+                    </ul>
+                {% else %}
+                    <ul class="pagination pagination-sm">
+                        {# `«` arrow  #}
+                        <li {{ thisPage == 1 ? 'class="disabled"' }}>
+                            <a href="{{ path('_index', {page: thisPage-1 < 1 ? 1 : thisPage-1}) }}">«</a>
+                        </li>
+
+                        {# Render each page number #}
+                        {% for i in 1..maxPages %}
+                        <li {{ thisPage == i ? 'class="active"' }}>
+                        <a href="{{ path('_index', {page: i}) }}">{{ i }}</a>
+                        </li>
+                        {% endfor %}
+
+                        {# `»` arrow #}
+                        <li {{ thisPage == maxPages ? 'class="disabled"' }}>
+                            <a href="{{ path('_index', {page: thisPage+1 <= maxPages ? thisPage+1 : thisPage}) }}">»</a>
+                        </li>
+                    </ul>
+                {% endif %}    
+            {% endif %}
+        <br/>
+        <a href="{{ path('_new') }}" class="btn btn-primary">Create a new review</a>
+    </div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <h1>Add new review</h1>
+
+        {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <input type="submit" value="Create" class="btn btn-info"/> <a href="{{ path('_index') }}" class="btn btn-success">Back to the list</a>
+        {{ form_end(form) }}
+
+
+    </div>
+{% endblock %}
